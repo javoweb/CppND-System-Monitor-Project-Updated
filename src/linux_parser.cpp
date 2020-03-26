@@ -6,6 +6,7 @@
 #include "linux_parser.h"
 
 using std::stof;
+using std::stol;
 using std::string;
 using std::to_string;
 using std::vector;
@@ -104,7 +105,14 @@ long LinuxParser::UpTime() {
 }
 
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+long LinuxParser::Jiffies() {
+  long total_time{0};
+  vector<string> cpu_stat = LinuxParser::CpuUtilization();
+  for (string data : cpu_stat) {
+    total_time += stol(data);
+  }
+  return total_time;
+}
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
@@ -126,8 +134,7 @@ vector<string> LinuxParser::CpuUtilization() {
     std::getline(stream, line);
     std::istringstream linestream(line);
     linestream >> data;
-    for (int it; it <= 7; it++) {
-      linestream >> data;
+    while (linestream >> data) {
       cpu_stats.push_back(data);
     }
   }
