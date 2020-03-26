@@ -122,7 +122,7 @@ long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
 long LinuxParser::ActiveJiffies() {
   long active_time{0};
   vector<string> cpu_stat = LinuxParser::CpuUtilization();
-  for (int it = 0; it < cpu_stat.size(); it++) {
+  for (uint it = 0; it < cpu_stat.size(); it++) {
     if (it != CPUStates::kIdle_ && it != CPUStates::kIOwait_) {
       active_time += stol(cpu_stat[it]);
     }
