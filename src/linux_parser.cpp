@@ -126,7 +126,7 @@ vector<string> LinuxParser::CpuUtilization() {
     std::getline(stream, line);
     std::istringstream linestream(line);
     linestream >> data;
-    for (int it; it <= 4; it++) {
+    for (int it; it <= 7; it++) {
       linestream >> data;
       cpu_stats.push_back(data);
     }
