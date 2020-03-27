@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "linux_parser.h"
 
@@ -300,14 +301,17 @@ long LinuxParser::UpTime(int pid) {
   std::ifstream stream(path);
   if (stream.is_open()) {
     while (std::getline(stream, line)) {
-      if (it == 22) {
-        std::istringstream linestream(line);
-        linestream >> data;
-        uptime += std::stol(data);
+      std::istringstream linestream(line);
+      while(linestream >> data){
+        if (it == 22) {
+          uptime += std::stol(data);
+        }
         it++;
       }
     }
   }
+  // std::cout << " a" << uptime << "b" << pid << " ";
   uptime = UpTime() - uptime / sysconf(_SC_CLK_TCK);
+  // std::cout<< sysconf(_SC_CLK_TCK) << " ";
   return uptime;
 }

@@ -24,6 +24,7 @@ class Process {
  float utilization_{0.0};
  std::string ram_;
  void ComputeCpuUtilization();
+ long rami_{0};
 };
 
 #endif

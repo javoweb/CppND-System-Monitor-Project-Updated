@@ -14,6 +14,9 @@ Process::Process(int pid) {
   pid_ = pid;
   ComputeCpuUtilization();
   ram_ = LinuxParser::Ram(pid_);
+  if (ram_.size() > 1){
+    rami_ = stol(ram_);
+  }
 }
 
 // TODO: Return this process's ID
@@ -48,5 +51,5 @@ long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a) const {
-  return utilization_ > a.utilization_;
+  return rami_ > a.rami_;
 }
