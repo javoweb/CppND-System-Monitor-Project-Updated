@@ -297,10 +297,22 @@ long LinuxParser::UpTime(int pid) {
   string line;
   string data;
   int it{1};
+  int aux{0};
   string path = kProcDirectory + std::to_string(pid) + kStatFilename;
   std::ifstream stream(path);
   if (stream.is_open()) {
+    // Avoid errors if there are spaces in executable's filename
     while (std::getline(stream, line)) {
+      for (auto &char_ : line){
+        if (char_ == '('){
+          aux = 1;
+        } else if (char_ == ')'){
+          aux = 0;
+        }
+        if (aux == 1){
+          char_ = '0';
+        }
+      }
       std::istringstream linestream(line);
       while(linestream >> data){
         if (it == 22) {

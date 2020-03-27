@@ -19,13 +19,13 @@ Processor& System::Cpu() { return cpu_; }
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
   // Populate processes if not already
-  if (processes_.size() == 0) {
-    vector<int> pids = LinuxParser::Pids();
-    for (int pid : pids) {
-      processes_.push_back(Process(pid));
-    }
+  processes_.clear();
+  vector<int> pids = LinuxParser::Pids();
+  for (int pid : pids) {
+    processes_.push_back(Process(pid));
   }
-  std::sort(processes_.begin(),processes_.end());
+
+  std::sort(processes_.begin(), processes_.end());
   return processes_;
 }
 
