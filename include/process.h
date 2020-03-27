@@ -9,7 +9,7 @@ It contains relevant attributes as shown below
 */
 class Process {
  public:
-  Process (int pid);
+  Process(int pid);
   int Pid();                               // TODO: See src/process.cpp
   std::string User();                      // TODO: See src/process.cpp
   std::string Command();                   // TODO: See src/process.cpp
@@ -20,11 +20,11 @@ class Process {
 
   // TODO: Declare any necessary private members
  private:
- int pid_;
- float utilization_{0.0};
- std::string ram_;
- void ComputeCpuUtilization();
- long rami_{0};
+  int pid_;
+  float utilization_{0.0};
+  std::string ram_;
+  void ComputeCpuUtilization();
+  long rami_{0};
 };
 
 #endif

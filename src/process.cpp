@@ -23,16 +23,12 @@ int Process::Pid() { return pid_; }
 // TODO: Return this process's CPU utilization
 
 void Process::ComputeCpuUtilization() {
+  float total = float(LinuxParser::UpTime(pid_));
   float active = float(LinuxParser::ActiveJiffies(pid_) / sysconf(_SC_CLK_TCK));
   // Calculate utilization rate
-
-  utilization_ = 100 * active / UpTime();
-  // Set current state as previous state for next calculation
+  utilization_ = active / total;
 }
-float Process::CpuUtilization() {
-  ComputeCpuUtilization();
-  return utilization_;
-}
+float Process::CpuUtilization() { return utilization_; }
 
 // TODO: Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(pid_); }

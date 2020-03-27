@@ -9,7 +9,7 @@ class Processor {
 
   // TODO: Declare any necessary private members
  private:
-  float prevTotal{0.0}; // Previous total cpu time
+  float prevTotal{0.0};   // Previous total cpu time
   float prevActive{0.0};  // Previous idle cpu time
 };
 
