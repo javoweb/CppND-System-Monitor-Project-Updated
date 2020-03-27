@@ -14,9 +14,7 @@ Process::Process(int pid) {
   pid_ = pid;
   ComputeCpuUtilization();
   ram_ = LinuxParser::Ram(pid_);
-  if (ram_.size() > 1){
-    rami_ = stol(ram_);
-  }
+  rami_ = stol(ram_);
 }
 
 // TODO: Return this process's ID
@@ -31,9 +29,10 @@ void Process::ComputeCpuUtilization() {
   utilization_ = 100 * active / UpTime();
   // Set current state as previous state for next calculation
 }
-float Process::CpuUtilization() { 
-    ComputeCpuUtilization();
-    return utilization_; }
+float Process::CpuUtilization() {
+  ComputeCpuUtilization();
+  return utilization_;
+}
 
 // TODO: Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(pid_); }
@@ -50,6 +49,4 @@ long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a) const {
-  return rami_ > a.rami_;
-}
+bool Process::operator<(Process const& a) const { return rami_ > a.rami_; }

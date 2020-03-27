@@ -1,8 +1,8 @@
 #include <dirent.h>
 #include <unistd.h>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 #include "linux_parser.h"
 
@@ -228,22 +228,37 @@ string LinuxParser::Command(int pid) {
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid) {
-  string uid;
+  unsigned long long ram{0};
   string line;
-  string key;
   string data;
-  string path = kProcDirectory + std::to_string(pid) + kStatusFilename;
+  int it{1};
+  int aux{0};
+  string path = kProcDirectory + std::to_string(pid) + kStatFilename;
   std::ifstream stream(path);
   if (stream.is_open()) {
-    while (std::getline(stream, line)) {
-      std::istringstream linestream(line);
-      linestream >> key >> data;
-      if (key == "VmSize:") {
-        uid = data;
+    // Avoid errors if there are spaces in executable's filename
+    std::getline(stream, line);
+    for (auto& char_ : line) {
+      if (char_ == '(') {
+        aux = 1;
+      } else if (char_ == ')') {
+        aux = 0;
+      }
+      if (aux == 1) {
+        char_ = '0';
       }
     }
+    std::istringstream linestream(line);
+    while (linestream >> data) {
+      if (it == 23) {  // Data in field 23 of stat file
+        ram = std::stoull(data);
+      }
+      it++;
+    }
   }
-  return uid;
+  // convert bytes to Mb
+  ram /= 1048576;
+  return std::to_string(ram);
 }
 
 // TODO: Read and return the user ID associated with a process
@@ -303,27 +318,26 @@ long LinuxParser::UpTime(int pid) {
   if (stream.is_open()) {
     // Avoid errors if there are spaces in executable's filename
     while (std::getline(stream, line)) {
-      for (auto &char_ : line){
-        if (char_ == '('){
+      for (auto& char_ : line) {
+        if (char_ == '(') {
           aux = 1;
-        } else if (char_ == ')'){
+        } else if (char_ == ')') {
           aux = 0;
         }
-        if (aux == 1){
+        if (aux == 1) {
           char_ = '0';
         }
       }
       std::istringstream linestream(line);
-      while(linestream >> data){
-        if (it == 22) {
+      while (linestream >> data) {
+        if (it == 22) {  // Data in field 22 of stat file
           uptime += std::stol(data);
         }
         it++;
       }
     }
   }
-  // std::cout << " a" << uptime << "b" << pid << " ";
+  // Calculate up time
   uptime = UpTime() - uptime / sysconf(_SC_CLK_TCK);
-  // std::cout<< sysconf(_SC_CLK_TCK) << " ";
   return uptime;
 }
